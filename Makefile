@@ -18,8 +18,7 @@ submodule-$(EDK2):
 
 submodule-$(KERNEL):
 	$(MAKE) -C $(KERNEL) build-dir-fresh
-	PVE_KERNEL_DIR = $(shell find $(KERNEL) -type d -name '$(KERNEL)*')
-	mk-build-deps -ir $(KERNEL)/$(PVE_KERNEL_DIR)/debian/control
+	mk-build-deps -ir $(KERNEL)/proxmox-kernel-*/debian/control
 
 submodule-$(QEMU):
 	$(MAKE) -C $(QEMU) submodule || { sed -i 's|https://github.com/Zeex/subhook.git|https://github.com/tianocore/edk2-subhook.git|' $(QEMU)/qemu/roms/edk2/.gitmodules }
@@ -74,7 +73,31 @@ clean-$(QEMU):
 install-dependencies:
 	apt update
 	apt install -y devscripts gcc-aarch64-linux-gnu gcc-riscv64-linux-gnu iasl mtools nasm python3-pexpect xorriso
+	apt install -y git devscripts quilt meson check libacl1-dev libaio-dev libattr1-dev libcap-ng-dev libcurl4-gnutls-dev libepoxy-dev libfdt-dev libgbm-dev libglusterfs-dev libgnutls28-dev libiscsi-dev libjpeg-dev libpci-dev libpixman-1-dev libproxmox-backup-qemu0-dev librbd-dev libsdl1.2-dev libseccomp-dev libslirp-dev libspice-protocol-dev libspice-server-dev libsystemd-dev liburing-dev libusb-1.0-0-dev libusbredirparser-dev libvirglrenderer-dev libzstd-dev python3-sphinx-rtd-theme python3-venv quilt uuid-dev xfslibs-dev
 
+install: install-$(EDK2) install-$(KERNEL) install-$(QEMU)
+
+install-$(EDK2):
+	$(eval VERSION_STRING = $(shell ls $(EDK2)/ | grep -E -x -- "$(EDK2)_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+_all.deb" | head -n 1 | grep -oP '(?<=edk2-firmware_)[0-9]+\.[0-9]+\.[0-9]+-[0-9]+'))
+	dpkg -i $(EDK2)/$(EDK2)_$(VERSION_STRING)_all.deb
+	dpkg -i $(EDK2)/$(EDK2)-ovmf_$(VERSION_STRING)_all.deb
+	apt install -f -y
+	apt-mark hold $(EDK2)
+	apt-mark hold $(EDK2)-ovmf
+
+install-$(KERNEL): 
+	$(eval VERSION_STRING = $(shell ls $(KERNEL)/ | grep -E -x -- "proxmox-kernel-[0-9]+\.[0-9]+\.[0-9]+-[0-9]+-pve_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+_amd64.deb" | head -n 1 | grep -oP '(?<=proxmox-kernel-)[0-9]+\.[0-9]+\.[0-9]+-[0-9]+'))
+	dpkg -i $(KERNEL)/proxmox-kernel-$(VERSION_STRING)-pve_$(VERSION_STRING)_amd64.deb
+	apt install -f -y
+	apt-mark hold proxmox-kernel-$(VERSION_STRING)-pve
+	# Pin the kernel using proxmox-boot-tool (press 'y')
+	proxmox-boot-tool kernel pin $(VERSION_STRING)-pve
+
+install-$(QEMU):
+	$(eval VERSION_STRING = $(shell ls $(QEMU)/ | grep -E -x -- "$(QEMU)-kvm_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+_amd64.deb" | head -n 1 | grep -oP '(?<=$(QEMU)-kvm_)[0-9]+\.[0-9]+\.[0-9]+-[0-9]+'))
+	dpkg -i $(QEMU)/$(QEMU)-kvm_$(VERSION_STRING)_amd64.deb
+	apt install -f -y
+	apt-mark hold $(QEMU)-kvm
 
 .PHONY: all build $(SUBMODULES) install-dependencies
 .PHONY: update-submodules submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
