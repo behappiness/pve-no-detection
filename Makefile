@@ -13,7 +13,6 @@ update-submodules: submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
 
 submodule-$(EDK2):
 	git submodule update --init
-	$(MAKE) -C $(EDK2) submodule || sed -i 's|https://github.com/Zeex/subhook.git|https://github.com/tianocore/edk2-subhook.git|' $(EDK2)/edk2/.gitmodules
 	git submodule sync --recursive $(EDK2)
 	git submodule update --init --recursive $(EDK2)
 
