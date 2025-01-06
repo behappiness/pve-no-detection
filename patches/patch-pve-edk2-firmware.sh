@@ -40,9 +40,9 @@ if [ "$CPU_VENDOR_ID" == "AuthenticAMD" ]; then
     quilt add OvmfPkg/Bhyve/BhyveRfbDxe/VbeShim.c
     quilt add OvmfPkg/Bhyve/BhyveX64.dsc
     quilt add OvmfPkg/Bhyve/SmbiosPlatformDxe/SmbiosPlatformDxe.c
-    # quilt add OvmfPkg/Include/IndustryStandard/Q35MchIch9.h
-    # quilt add OvmfPkg/QemuVideoDxe/Driver.c
-    # quilt add ShellPkg/ShellPkg.dec
+    quilt add OvmfPkg/Include/IndustryStandard/Q35MchIch9.h
+    quilt add OvmfPkg/QemuVideoDxe/Driver.c
+    quilt add ShellPkg/ShellPkg.dec
 
     # TODO: randomize Names and IDs
     # Names
