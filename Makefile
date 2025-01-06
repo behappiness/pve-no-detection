@@ -12,8 +12,6 @@ all: install-dependencies update-submodules apply-patches build
 update-submodules: submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
 
 submodule-$(EDK2):
-	git submodule update --init
-	git submodule sync --recursive $(EDK2)
 	git submodule update --init --recursive $(EDK2)
 
 submodule-$(KERNEL):
