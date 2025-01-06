@@ -12,16 +12,19 @@ all: install-dependencies update-submodules apply-patches build
 update-submodules: submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
 
 submodule-$(EDK2):
-	$(MAKE) -C $(EDK2) submodule || { sed -i 's|https://github.com/Zeex/subhook.git|https://github.com/tianocore/edk2-subhook.git|' $(EDK2)/edk2/.gitmodules }
+	git submodule update --init
+	$(MAKE) -C $(EDK2) submodule || sed -i 's|https://github.com/Zeex/subhook.git|https://github.com/tianocore/edk2-subhook.git|' $(EDK2)/edk2/.gitmodules
 	git submodule sync --recursive $(EDK2)
-	$(MAKE) -C $(EDK2) submodule
+	git submodule update --init --recursive $(EDK2)
 
 submodule-$(KERNEL):
+	git submodule update --init
 	$(MAKE) -C $(KERNEL) build-dir-fresh
 	mk-build-deps -ir $(KERNEL)/proxmox-kernel-*/debian/control
 
 submodule-$(QEMU):
-	$(MAKE) -C $(QEMU) submodule || { sed -i 's|https://github.com/Zeex/subhook.git|https://github.com/tianocore/edk2-subhook.git|' $(QEMU)/qemu/roms/edk2/.gitmodules }
+	git submodule update --init
+	$(MAKE) -C $(QEMU) submodule || sed -i 's|https://github.com/Zeex/subhook.git|https://github.com/tianocore/edk2-subhook.git|' $(QEMU)/qemu/roms/edk2/.gitmodules
 	git submodule sync --recursive $(QEMU)
 	$(MAKE) -C $(QEMU) submodule
 
@@ -41,17 +44,17 @@ $(QEMU):
 	$(MAKE) -C $(QEMU)
 
 # Apply patches if needed
-apply-patches: apply-patch-$(EDK2) apply-patch-$(KERNEL) apply-patch-$(QEMU)
+apply-patches: patch-$(EDK2) patch-$(KERNEL) patch-$(QEMU)
 
-apply-patch-$(EDK2):
+patch-$(EDK2):
 	@echo "Applying patches-$(EDK2)..."
-	bash patches/patch-$(EDK2).sh
+	bash patches/patch-$(EDK2).sh $(EDK2)
 
-apply-patch-$(KERNEL):
+patch-$(KERNEL):
 	@echo "Applying patches-$(KERNEL)..."
 	bash patches/patch-$(KERNEL).sh
 
-apply-patch-$(QEMU):
+patch-$(QEMU):
 	@echo "Applying patches-$(QEMU)..."
 	bash patches/patch-$(QEMU).sh
 
@@ -72,7 +75,7 @@ clean-$(QEMU):
 
 install-dependencies:
 	apt update
-	apt install -y devscripts gcc-aarch64-linux-gnu gcc-riscv64-linux-gnu iasl mtools nasm python3-pexpect xorriso
+	apt install -y devscripts gcc-aarch64-linux-gnu gcc-riscv64-linux-gnu iasl mtools nasm python3-pexpect xorriso git-buildpackage
 	apt install -y git devscripts quilt meson check libacl1-dev libaio-dev libattr1-dev libcap-ng-dev libcurl4-gnutls-dev libepoxy-dev libfdt-dev libgbm-dev libglusterfs-dev libgnutls28-dev libiscsi-dev libjpeg-dev libpci-dev libpixman-1-dev libproxmox-backup-qemu0-dev librbd-dev libsdl1.2-dev libseccomp-dev libslirp-dev libspice-protocol-dev libspice-server-dev libsystemd-dev liburing-dev libusb-1.0-0-dev libusbredirparser-dev libvirglrenderer-dev libzstd-dev python3-sphinx-rtd-theme python3-venv quilt uuid-dev xfslibs-dev
 
 install: install-$(EDK2) install-$(KERNEL) install-$(QEMU)
@@ -101,5 +104,5 @@ install-$(QEMU):
 
 .PHONY: all build $(SUBMODULES) install-dependencies
 .PHONY: update-submodules submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
-.PHONY: apply-patches apply-patch-$(EDK2) apply-patch-$(KERNEL) apply-patch-$(QEMU)
+.PHONY: apply-patches patch-$(EDK2) patch-$(KERNEL) patch-$(QEMU)
 .PHONY: clean clean-$(EDK2) clean-$(KERNEL) clean-$(QEMU)
