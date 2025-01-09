@@ -16,9 +16,8 @@ submodule-$(EDK2):
 	$(MAKE) -C $(EDK2) submodule
 
 submodule-$(KERNEL):
-	git submodule update --init
-	$(MAKE) -C $(KERNEL) build-dir-fresh
-	mk-build-deps -ir $(KERNEL)/proxmox-kernel-*/debian/control
+	git submodule update --init $(KERNEL)
+	$(MAKE) -C $(KERNEL) submodule
 
 submodule-$(QEMU):
 	git submodule update --init
@@ -35,6 +34,8 @@ $(EDK2):
 
 $(KERNEL):
 	@echo "Building $(KERNEL)..."
+	$(MAKE) -C $(KERNEL) build-dir-fresh
+	mk-build-deps -ir $(KERNEL)/proxmox-kernel-*/debian/control
 	$(MAKE) -C $(KERNEL) deb
 
 $(QEMU):
@@ -50,7 +51,7 @@ patch-$(EDK2):
 
 patch-$(KERNEL):
 	@echo "Applying patches-$(KERNEL)..."
-	bash patches/patch-$(KERNEL).sh
+	bash patches/patch-$(KERNEL).sh $(KERNEL)
 
 patch-$(QEMU):
 	@echo "Applying patches-$(QEMU)..."

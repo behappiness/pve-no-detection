@@ -24,7 +24,7 @@ fi
 # Load previous patches
 quilt push -a
 
-if [ "$CPU_VENDOR_ID" == "AuthenticAMD" ]; then
+if [[ "$CPU_VENDOR_ID" =~ .*AuthenticAMD.* ]]; then
     echo "AMD CPU detected, applying AMD patches"
     PATCH_FILE="amd-evasion.patch"
     quilt new $PATCH_FILE
@@ -78,7 +78,7 @@ if [ "$CPU_VENDOR_ID" == "AuthenticAMD" ]; then
     sed -i 's|"02/06/2015\\0"|"02/06/2023\\0"|' OvmfPkg/Bhyve/SmbiosPlatformDxe/SmbiosPlatformDxe.c
 fi
 
-if [ "$CPU_VENDOR_ID" == "GenuineIntel" ]; then
+if [[ "$CPU_VENDOR_ID" =~ .*GenuineIntel.* ]]; then
     echo "Intel CPU detected, applying Intel patches"
     PATCH_FILE="intel-evasion.patch"
     quilt new $PATCH_FILE
@@ -128,7 +128,7 @@ if [ "$CPU_VENDOR_ID" == "GenuineIntel" ]; then
     sed -i 's|"02/06/2015\\0"|"02/06/2023\\0"|' OvmfPkg/Bhyve/SmbiosPlatformDxe/SmbiosPlatformDxe.c
 fi
 
-if [ "$CPU_VENDOR_ID" != "AuthenticAMD" ] && [ "$CPU_VENDOR_ID" != "GenuineIntel" ]; then
+if [[ ! "$CPU_VENDOR_ID" =~ .*AuthenticAMD.* ]] && [[ ! "$CPU_VENDOR_ID" =~ .*GenuineIntel.* ]]; then
     echo "Unknown CPU vendor"
     exit 1
 fi
