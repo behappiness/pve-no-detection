@@ -21,9 +21,8 @@ submodule-$(KERNEL):
 
 submodule-$(QEMU):
 	git submodule update --init
-	$(MAKE) -C $(QEMU) submodule || sed -i 's|https://github.com/Zeex/subhook.git|https://github.com/tianocore/edk2-subhook.git|' $(QEMU)/qemu/roms/edk2/.gitmodules
-	git submodule sync --recursive $(QEMU)
 	$(MAKE) -C $(QEMU) submodule
+#	cd $(QEMU)/qemu/roms/edk2 && git checkout edk2-stable202411 #maybe this is not needed
 
 # Build each submodule using its own Makefile
 build: $(SUBMODULES)
@@ -55,7 +54,7 @@ patch-$(KERNEL):
 
 patch-$(QEMU):
 	@echo "Applying patches-$(QEMU)..."
-	bash patches/patch-$(QEMU).sh
+	bash patches/patch-$(QEMU).sh $(QEMU)
 
 # Clean
 clean: clean-$(EDK2) clean-$(KERNEL) clean-$(QEMU)
