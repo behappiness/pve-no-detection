@@ -76,7 +76,7 @@ install-dependencies:
 	apt install -y devscripts gcc-aarch64-linux-gnu gcc-riscv64-linux-gnu iasl mtools nasm python3-pexpect xorriso git-buildpackage
 	apt install -y git devscripts quilt meson check libacl1-dev libaio-dev libattr1-dev libcap-ng-dev libcurl4-gnutls-dev libepoxy-dev libfdt-dev libgbm-dev libglusterfs-dev libgnutls28-dev libiscsi-dev libjpeg-dev libpci-dev libpixman-1-dev libproxmox-backup-qemu0-dev librbd-dev libsdl1.2-dev libseccomp-dev libslirp-dev libspice-protocol-dev libspice-server-dev libsystemd-dev liburing-dev libusb-1.0-0-dev libusbredirparser-dev libvirglrenderer-dev libzstd-dev python3-sphinx-rtd-theme python3-venv quilt uuid-dev xfslibs-dev
 
-install: install-$(EDK2) install-$(KERNEL) install-$(QEMU)
+install: install-$(QEMU) install-$(EDK2) install-$(KERNEL)
 
 install-$(EDK2):
 	$(eval VERSION_STRING = $(shell ls $(EDK2)/ | grep -E -x -- "$(EDK2)_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+_all.deb" | head -n 1 | grep -oP '(?<=edk2-firmware_)[0-9]+\.[0-9]+\.[0-9]+-[0-9]+'))
