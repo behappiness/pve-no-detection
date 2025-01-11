@@ -80,10 +80,8 @@ install: install-$(KERNEL) install-$(QEMU) install-$(EDK2)
 
 install-$(EDK2):
 	$(eval VERSION_STRING = $(shell ls $(EDK2)/ | grep -E -x -- "$(EDK2)_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+_all.deb" | head -n 1 | grep -oP '(?<=edk2-firmware_)[0-9]+\.[0-9]+\.[0-9]+-[0-9]+'))
-	dpkg -i $(EDK2)/$(EDK2)_$(VERSION_STRING)_all.deb
 	dpkg -i $(EDK2)/$(EDK2)-ovmf_$(VERSION_STRING)_all.deb
 	apt install -f -y
-	apt-mark hold $(EDK2)
 	apt-mark hold $(EDK2)-ovmf
 
 install-$(KERNEL): 
