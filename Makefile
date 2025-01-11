@@ -6,10 +6,10 @@ QEMU = pve-qemu
 SUBMODULES = $(EDK2) $(KERNEL) $(QEMU)
 
 # Default target
-all: install-dependencies update-submodules apply-patches build
+all: install-dependencies submodules patches build
 
 # Initialize and update submodules
-update-submodules: submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
+submodules: submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
 
 submodule-$(EDK2):
 	git submodule update --init $(EDK2)
@@ -42,7 +42,7 @@ $(QEMU):
 	$(MAKE) -C $(QEMU)
 
 # Apply patches if needed
-apply-patches: patch-$(EDK2) patch-$(KERNEL) patch-$(QEMU)
+patches: patch-$(EDK2) patch-$(KERNEL) patch-$(QEMU)
 
 patch-$(EDK2):
 	@echo "Applying patches-$(EDK2)..."
@@ -76,7 +76,7 @@ install-dependencies:
 	apt install -y devscripts gcc-aarch64-linux-gnu gcc-riscv64-linux-gnu iasl mtools nasm python3-pexpect xorriso git-buildpackage
 	apt install -y git devscripts quilt meson check libacl1-dev libaio-dev libattr1-dev libcap-ng-dev libcurl4-gnutls-dev libepoxy-dev libfdt-dev libgbm-dev libglusterfs-dev libgnutls28-dev libiscsi-dev libjpeg-dev libpci-dev libpixman-1-dev libproxmox-backup-qemu0-dev librbd-dev libsdl1.2-dev libseccomp-dev libslirp-dev libspice-protocol-dev libspice-server-dev libsystemd-dev liburing-dev libusb-1.0-0-dev libusbredirparser-dev libvirglrenderer-dev libzstd-dev python3-sphinx-rtd-theme python3-venv quilt uuid-dev xfslibs-dev
 
-install: install-$(QEMU) install-$(EDK2) install-$(KERNEL)
+install: install-$(KERNEL) install-$(QEMU) install-$(EDK2)
 
 install-$(EDK2):
 	$(eval VERSION_STRING = $(shell ls $(EDK2)/ | grep -E -x -- "$(EDK2)_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+_all.deb" | head -n 1 | grep -oP '(?<=edk2-firmware_)[0-9]+\.[0-9]+\.[0-9]+-[0-9]+'))
@@ -101,6 +101,6 @@ install-$(QEMU):
 	apt-mark hold $(QEMU)-kvm
 
 .PHONY: all build $(SUBMODULES) install-dependencies
-.PHONY: update-submodules submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
-.PHONY: apply-patches patch-$(EDK2) patch-$(KERNEL) patch-$(QEMU)
+.PHONY: submodules submodule-$(EDK2) submodule-$(KERNEL) submodule-$(QEMU)
+.PHONY: patches patch-$(EDK2) patch-$(KERNEL) patch-$(QEMU)
 .PHONY: clean clean-$(EDK2) clean-$(KERNEL) clean-$(QEMU)

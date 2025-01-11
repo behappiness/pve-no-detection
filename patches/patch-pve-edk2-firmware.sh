@@ -40,8 +40,9 @@ if [[ "$CPU_VENDOR_ID" =~ .*AuthenticAMD.* ]]; then
     quilt add OvmfPkg/Bhyve/BhyveRfbDxe/VbeShim.c
     quilt add OvmfPkg/Bhyve/BhyveX64.dsc
     quilt add OvmfPkg/Bhyve/SmbiosPlatformDxe/SmbiosPlatformDxe.c
-    quilt add OvmfPkg/Include/IndustryStandard/Q35MchIch9.h
-    quilt add OvmfPkg/QemuVideoDxe/Driver.c
+    # Its causing windows to not boot
+    # quilt add OvmfPkg/Include/IndustryStandard/Q35MchIch9.h
+    # quilt add OvmfPkg/QemuVideoDxe/Driver.c
     quilt add ShellPkg/ShellPkg.dec
 
     # TODO: randomize Names and IDs
@@ -62,14 +63,14 @@ if [[ "$CPU_VENDOR_ID" =~ .*AuthenticAMD.* ]]; then
     sed -i "s|SIGNATURE_32('B','H','Y','V')|SIGNATURE_32('A','M','I',' ')|" OvmfPkg/Bhyve/AcpiTables/Platform.h
 
     # IDs
-    sed -i 's|INTEL_Q35_MCH_DEVICE_ID  0x29C0|INTEL_Q35_MCH_DEVICE_ID  0x1480|' OvmfPkg/Include/IndustryStandard/Q35MchIch9.h
+    # sed -i 's|INTEL_Q35_MCH_DEVICE_ID  0x29C0|INTEL_Q35_MCH_DEVICE_ID  0x1480|' OvmfPkg/Include/IndustryStandard/Q35MchIch9.h
     sed -i 's|0x20202020324B4445|0x2049204D2041|' MdeModulePkg/MdeModulePkg.dec
-    sed -i 's|0x1234|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
-    sed -i 's|0x1b36|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
-    sed -i 's|0x1af4|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x1234|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x1b36|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x1af4|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
     # TODO: Replace with correct AMD version
-    sed -i 's|0x1050|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
-    sed -i 's|0x15ad|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x1050|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x15ad|0x1022|' OvmfPkg/QemuVideoDxe/Driver.c
     
     # Miscallaneous
     sed -i 's|"VESA"|"VUSA"|' OvmfPkg/Bhyve/BhyveRfbDxe/VbeShim.c
@@ -94,7 +95,8 @@ if [[ "$CPU_VENDOR_ID" =~ .*GenuineIntel.* ]]; then
     quilt add OvmfPkg/Bhyve/BhyveRfbDxe/VbeShim.c
     quilt add OvmfPkg/Bhyve/BhyveX64.dsc
     quilt add OvmfPkg/Bhyve/SmbiosPlatformDxe/SmbiosPlatformDxe.c
-    quilt add OvmfPkg/QemuVideoDxe/Driver.c
+    # Its causing windows to not boot
+    # quilt add OvmfPkg/QemuVideoDxe/Driver.c
     quilt add ShellPkg/ShellPkg.dec
 
     # TODO: randomize Names and IDs
@@ -115,11 +117,11 @@ if [[ "$CPU_VENDOR_ID" =~ .*GenuineIntel.* ]]; then
 
     # IDs
     sed -i 's|0x20202020324B4445|0x2020207076525F55|' MdeModulePkg/MdeModulePkg.dec
-    sed -i 's|0x1234|0x8086|' OvmfPkg/QemuVideoDxe/Driver.c
-    sed -i 's|0x1b36|0x8086|' OvmfPkg/QemuVideoDxe/Driver.c
-    sed -i 's|0x1af4|0x8086|' OvmfPkg/QemuVideoDxe/Driver.c
-    sed -i 's|0x1050|0x0416|' OvmfPkg/QemuVideoDxe/Driver.c
-    sed -i 's|0x15ad|0x8086|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x1234|0x8086|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x1b36|0x8086|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x1af4|0x8086|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x1050|0x0416|' OvmfPkg/QemuVideoDxe/Driver.c
+    # sed -i 's|0x15ad|0x8086|' OvmfPkg/QemuVideoDxe/Driver.c
 
     # Miscallaneous
     sed -i 's|"VESA"|"VUSA"|' OvmfPkg/Bhyve/BhyveRfbDxe/VbeShim.c
