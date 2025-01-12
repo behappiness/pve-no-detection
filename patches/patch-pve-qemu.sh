@@ -56,12 +56,13 @@ if [[ "$CPU_VENDOR_ID" =~ .*AuthenticAMD.* ]]; then
 
   quilt add include/hw/acpi/aml-build.h
   sed -i 's/"BOCHS "/"ALASKA"/g' include/hw/acpi/aml-build.h
-  sed -i 's/"BXPC    "/"A M I   "/g' include/hw/acpi/aml-build.h
+  sed -i 's/"BXPC    "/"A M I "/g' include/hw/acpi/aml-build.h
 
   quilt add target/i386/cpu.c
   sed -i 's/"QEMU Virtual CPU version "/"AMD CPU version "/g' target/i386/cpu.c
   sed -i 's/"Common KVM processor"/"Common AMD processor"/g' target/i386/cpu.c
   sed -i 's/"Common 32-bit KVM processor"/"Common 32-bit AMD processor"/g' target/i386/cpu.c
+  sed -i 's/"Microsoft Hv"/"AuthenticAMD"/g' target/i386/cpu.c
 
   quilt add target/s390x/tcg/misc_helper.c
   sed -i 's/"QEMU            "/"AMD             "/g' target/s390x/tcg/misc_helper.c
@@ -69,6 +70,12 @@ if [[ "$CPU_VENDOR_ID" =~ .*AuthenticAMD.* ]]; then
   sed -i 's/"QEMUQEMUQEMUQEMU"/"AMDAMDAMDAMDAMDA"/g' target/s390x/tcg/misc_helper.c
   sed -i 's/"QEMU    "/"AMD     "/g' target/s390x/tcg/misc_helper.c
   sed -i 's/"KVM\/Linux       "/"AMDAMDAMD       "/g' target/s390x/tcg/misc_helper.c
+
+  quilt add target/i386/kvm/kvm.c
+  sed -i 's/memcpy(signature, "Microsoft VS", 12);/memcpy(signature, "AuthenticAMD", 12);/' target/i386/kvm/kvm.c
+  sed -i 's/memcpy(signature, "VS#1\\0\\0\\0\\0\\0\\0\\0\\0", 12);/memcpy(signature, "AuthenticAMD", 12);/' target/i386/kvm/kvm.c
+  sed -i 's/memcpy(signature, "XenVMMXenVMM", 12);/memcpy(signature, "AuthenticAMD", 12);/' target/i386/kvm/kvm.c
+  sed -i 's/memcpy(signature, "KVMKVMKVM\\0\\0\\0", 12);/memcpy(signature, "AuthenticAMD", 12);/' target/i386/kvm/kvm.c
 fi
 
 if [[ "$CPU_VENDOR_ID" =~ .*GenuineIntel.* ]]; then
@@ -103,6 +110,7 @@ if [[ "$CPU_VENDOR_ID" =~ .*GenuineIntel.* ]]; then
   sed -i 's/"QEMU Virtual CPU version "/"Intel CPU version "/g' target/i386/cpu.c
   sed -i 's/"Common KVM processor"/"Common Intel processor"/g' target/i386/cpu.c
   sed -i 's/"Common 32-bit KVM processor"/"Common 32-bit Intel processor"/g' target/i386/cpu.c
+  sed -i 's/"Microsoft Hv"/"GenuineIntel"/g' target/i386/cpu.c
 
   quilt add target/s390x/tcg/misc_helper.c
   sed -i 's/"QEMU            "/"Intel           "/g' target/s390x/tcg/misc_helper.c
@@ -110,6 +118,12 @@ if [[ "$CPU_VENDOR_ID" =~ .*GenuineIntel.* ]]; then
   sed -i 's/"QEMUQEMUQEMUQEMU"/"INTELINTELINTELI"/g' target/s390x/tcg/misc_helper.c
   sed -i 's/"QEMU    "/"Intel   "/g' target/s390x/tcg/misc_helper.c
   sed -i 's/"KVM\/Linux       "/"IntelIntel      "/g' target/s390x/tcg/misc_helper.c
+
+  quilt add target/i386/kvm/kvm.c
+  sed -i 's/memcpy(signature, "Microsoft VS", 12);/memcpy(signature, "GenuineIntel", 12);/' target/i386/kvm/kvm.c
+  sed -i 's/memcpy(signature, "VS#1\\0\\0\\0\\0\\0\\0\\0\\0", 12);/memcpy(signature, "GenuineIntel", 12);/' target/i386/kvm/kvm.c
+  sed -i 's/memcpy(signature, "XenVMMXenVMM", 12);/memcpy(signature, "GenuineIntel", 12);/' target/i386/kvm/kvm.c
+  sed -i 's/memcpy(signature, "KVMKVMKVM\\0\\0\\0", 12);/memcpy(signature, "GenuineIntel", 12);/' target/i386/kvm/kvm.c
 fi
 
 ###################################################
@@ -181,10 +195,10 @@ sed -i 's/edid\[17\] = 2014 - 1990;/edid\[17\] = 2020 - 2024;/g' hw/display/edid
 
 quilt add hw/i386/fw_cfg.c
 sed -i 's/smbios_set_defaults("QEMU"/smbios_set_defaults("Unknown"/' hw/i386/fw_cfg.c
-sed -i 's/aml_string("QEMU0002")/aml_string("PNP0A03")/' hw/i386/fw_cfg.c
+sed -i 's/aml_string("QEMU0002")/aml_string("UEFI0002")/' hw/i386/fw_cfg.c
 
-quilt add hw/i386/multiboot.c
-sed -i 's/const char \*bootloader_name = "qemu";/const char \*bootloader_name = "Windows Boot Manager";/' hw/i386/multiboot.c
+# quilt add hw/i386/multiboot.c
+# sed -i 's/const char \*bootloader_name = "qemu";/const char \*bootloader_name = "Windows Boot Manager";/' hw/i386/multiboot.c
 
 quilt add hw/i386/pc.c
 sed -i 's/"QEMU Virtual CPU version " v/"CPU version " v/g' hw/i386/pc.c
@@ -236,13 +250,13 @@ sed -i 's/"QEMU Virtio /"/g' hw/input/virtio-input-hid.c
 sed -i 's/smbios_set_defaults("QEMU"/smbios_set_defaults("Unknown"/' hw/loongarch/virt.c
 
 quilt add hw/misc/pvpanic-isa.c
-sed -i 's/"QEMU0001"/"PNP0A03"/g' hw/misc/pvpanic-isa.c
+sed -i 's/"QEMU0001"/"UEFI0001"/g' hw/misc/pvpanic-isa.c
 
 quilt add hw/nvme/ctrl.c
 sed -i 's/"QEMU /"/g' hw/nvme/ctrl.c
 
 quilt add hw/nvram/fw_cfg-acpi.c
-sed -i 's/"QEMU0002"/"PNP0A03"/' hw/nvram/fw_cfg-acpi.c
+sed -i 's/"QEMU0002"/"UEFI0002"/' hw/nvram/fw_cfg-acpi.c
 
 # is this needed?
 # sed -i 's/0x51454d5520434647ULL/0x4155535520434647ULL/g' hw/nvram/fw_cfg.c
@@ -351,7 +365,7 @@ sed -i 's/"QEMU /"/g' hw/usb/u2f.c
 sed -i 's/"0"/"Y0KH87XGM3"/g' hw/usb/u2f.c
 
 quilt add include/standard-headers/linux/qemu_fw_cfg.h
-sed -i 's/"QEMU0002"/"PNP0A03"/g' include/standard-headers/linux/qemu_fw_cfg.h
+sed -i 's/"QEMU0002"/"UEFI0002"/g' include/standard-headers/linux/qemu_fw_cfg.h
 # is this needed?
 # sed -i 's/0x51454d5520434647ULL/0x4155535520434647ULL/g' include/standard-headers/linux/qemu_fw_cfg.h
 
@@ -375,13 +389,6 @@ sed -i 's/"QEMU /"/g' qapi/ui.json
 
 # already added
 sed -i 's/"QEMU TCG CPU version "/"TCG CPU version "/g' target/i386/cpu.c
-sed -i 's/"Microsoft Hv"/""/g' target/i386/cpu.c
-
-quilt add target/i386/kvm/kvm.c
-sed -i 's/memcpy(signature, "Microsoft VS", 12);/memset(signature, 0, 12);/' target/i386/kvm/kvm.c
-sed -i 's/memcpy(signature, "VS#1\\0\\0\\0\\0\\0\\0\\0\\0", 12);/memset(signature, 0, 12);/' target/i386/kvm/kvm.c
-sed -i 's/memcpy(signature, "XenVMMXenVMM", 12);/memset(signature, 0, 12);/' target/i386/kvm/kvm.c
-sed -i 's/memcpy(signature, "KVMKVMKVM\\0\\0\\0", 12);/memset(signature, 0, 12);/' target/i386/kvm/kvm.c
 
 quilt add target/s390x/cpu_models.c
 sed -i 's/"QEMU Virtual CPU version %s"/"CPU version %s"/g' target/s390x/cpu_models.c
@@ -484,6 +491,8 @@ sed -i 's/t->bios_characteristics_extension_bytes\[1\] |= 0x08;/t->bios_characte
 
 # cd ../..
 ###################################################
+
+bash ../../patches/randomized-patch-pve-qemu.sh
 
 # Finish up the patches
 quilt refresh
