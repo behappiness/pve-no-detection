@@ -51,8 +51,8 @@ if [[ "$CPU_VENDOR_ID" =~ .*AuthenticAMD.* ]]; then
   sed -i 's/"QEMU Virtual Machine"/"AMD Machine"/' hw/loongarch/virt.c
 
   # dont need?
-  # quilt add hw/ppc/spapr_pci.c
-  # sed -i 's/const char \*devtype = "qemu";/const char \*devtype = "amd";/' hw/ppc/spapr_pci.c
+  quilt add hw/ppc/spapr_pci.c
+  sed -i 's/const char \*devtype = "qemu";/const char \*devtype = "amd";/' hw/ppc/spapr_pci.c
 
   quilt add include/hw/acpi/aml-build.h
   sed -i 's/"BOCHS "/"ALASKA"/g' include/hw/acpi/aml-build.h
@@ -99,8 +99,8 @@ if [[ "$CPU_VENDOR_ID" =~ .*GenuineIntel.* ]]; then
   sed -i 's/"QEMU Virtual Machine"/"Intel Machine"/' hw/loongarch/virt.c
 
   # dont need?
-  # quilt add hw/ppc/spapr_pci.c
-  # sed -i 's/const char \*devtype = "qemu";/const char \*devtype = "intel";/' hw/ppc/spapr_pci.c
+  quilt add hw/ppc/spapr_pci.c
+  sed -i 's/const char \*devtype = "qemu";/const char \*devtype = "intel";/' hw/ppc/spapr_pci.c
 
   quilt add include/hw/acpi/aml-build.h
   sed -i 's/"BOCHS "/"INTEL "/g' include/hw/acpi/aml-build.h
@@ -158,11 +158,11 @@ sed -i 's/build_append_padded_str(tbl, "QEMU", 8, /build_append_padded_str(tbl, 
 # fi
 
 # dont need? (wasnt in qemu 9.2.0 patch)
-# quilt add hw/arm/nseries.c
-# sed -i 's/QEMU N800/Nokia N800/g' hw/arm/nseries.c
-# sed -i 's/QEMU LCD panel/LG LCD panel/g' hw/arm/nseries.c
-# sed -i 's/strcpy((void \*) w, "QEMU ")/strcpy((void \*) w, "MSI  ")/g' hw/arm/nseries.c
-# sed -i 's/"1.1.10-qemu" : "1.1.6-qemu"/"1.1.10" : "1.1.6"/g' hw/arm/nseries.c
+quilt add hw/arm/nseries.c
+sed -i 's/QEMU N800/Nokia N800/g' hw/arm/nseries.c
+sed -i 's/QEMU LCD panel/LG LCD panel/g' hw/arm/nseries.c
+sed -i 's/strcpy((void \*) w, "QEMU ")/strcpy((void \*) w, "MSI  ")/g' hw/arm/nseries.c
+sed -i 's/"1.1.10-qemu" : "1.1.6-qemu"/"1.1.10" : "1.1.6"/g' hw/arm/nseries.c
 
 quilt add hw/arm/sbsa-ref.c
 sed -i "s/QEMU 'SBSA Reference' ARM Virtual Machine/Qualcomm 'Reference' ARM SoC/g" hw/arm/sbsa-ref.c
@@ -197,14 +197,14 @@ quilt add hw/i386/fw_cfg.c
 sed -i 's/smbios_set_defaults("QEMU"/smbios_set_defaults("Unknown"/' hw/i386/fw_cfg.c
 sed -i 's/aml_string("QEMU0002")/aml_string("UEFI0002")/' hw/i386/fw_cfg.c
 
-# quilt add hw/i386/multiboot.c
-# sed -i 's/const char \*bootloader_name = "qemu";/const char \*bootloader_name = "Windows Boot Manager";/' hw/i386/multiboot.c
+quilt add hw/i386/multiboot.c
+sed -i 's/const char \*bootloader_name = "qemu";/const char \*bootloader_name = "Windows Boot Manager";/' hw/i386/multiboot.c
 
 quilt add hw/i386/pc.c
 sed -i 's/"QEMU Virtual CPU version " v/"CPU version " v/g' hw/i386/pc.c
 
 # is this needed?
-# sed -i 's/Standard PC (i440FX + PIIX, 1996)/ASUS M4A88TD-Mi440fx/g' hw/i386/pc_piix.c
+sed -i 's/Standard PC (i440FX + PIIX, 1996)/ASUS M4A88TD-Mi440fx/g' hw/i386/pc_piix.c
 
 # already added
 sed -i 's/m->family = "pc_q35";/m->family = "pc_x570";/' hw/i386/pc_q35.c
@@ -226,8 +226,8 @@ quilt add hw/input/adb-mouse.c
 sed -i 's/"QEMU /"/g' hw/input/adb-mouse.c
 
 # dont need?
-# quilt add hw/input/ads7846.c
-# sed -i 's/"QEMU /"/g' hw/input/ads7846.c
+quilt add hw/input/ads7846.c
+sed -i 's/"QEMU /"/g' hw/input/ads7846.c
 
 quilt add hw/input/hid.c
 sed -i 's/"QEMU /"/g' hw/input/hid.c
@@ -236,12 +236,12 @@ quilt add hw/input/ps2.c
 sed -i 's/"QEMU /"/g' hw/input/ps2.c
 
 # dont need?
-# quilt add hw/input/tsc2005.c
-# sed -i 's/"QEMU /"/g' hw/input/tsc2005.c
+quilt add hw/input/tsc2005.c
+sed -i 's/"QEMU /"/g' hw/input/tsc2005.c
 
 # dont need?
-# quilt add hw/input/tsc210x.c
-# sed -i 's/"QEMU /"/g' hw/input/tsc210x.c
+quilt add hw/input/tsc210x.c
+sed -i 's/"QEMU /"/g' hw/input/tsc210x.c
 
 quilt add hw/input/virtio-input-hid.c
 sed -i 's/"QEMU Virtio /"/g' hw/input/virtio-input-hid.c
@@ -259,7 +259,7 @@ quilt add hw/nvram/fw_cfg-acpi.c
 sed -i 's/"QEMU0002"/"UEFI0002"/' hw/nvram/fw_cfg-acpi.c
 
 # is this needed?
-# sed -i 's/0x51454d5520434647ULL/0x4155535520434647ULL/g' hw/nvram/fw_cfg.c
+sed -i 's/0x51454d5520434647ULL/0x4155535520434647ULL/g' hw/nvram/fw_cfg.c
 
 quilt add hw/pci-host/gpex.c
 sed -i 's/"QEMU g/"G/g' hw/pci-host/gpex.c
@@ -267,7 +267,7 @@ sed -i 's/"QEMU g/"G/g' hw/pci-host/gpex.c
 quilt add hw/ppc/e500plat.c
 sed -i 's/"QEMU /"/g' hw/ppc/e500plat.c
 # is this needed?
-# sed -i 's/qemu-e500/asus-e500/g' hw/ppc/e500plat.c
+sed -i 's/qemu-e500/asus-e500/g' hw/ppc/e500plat.c
 
 quilt add hw/scsi/mptconfig.c
 sed -i 's/"s16s8s16s16s16"/"s10s4s85s45s34"/g' hw/scsi/mptconfig.c
@@ -367,13 +367,13 @@ sed -i 's/"0"/"Y0KH87XGM3"/g' hw/usb/u2f.c
 quilt add include/standard-headers/linux/qemu_fw_cfg.h
 sed -i 's/"QEMU0002"/"UEFI0002"/g' include/standard-headers/linux/qemu_fw_cfg.h
 # is this needed?
-# sed -i 's/0x51454d5520434647ULL/0x4155535520434647ULL/g' include/standard-headers/linux/qemu_fw_cfg.h
+sed -i 's/0x51454d5520434647ULL/0x4155535520434647ULL/g' include/standard-headers/linux/qemu_fw_cfg.h
 
 quilt add migration/rdma.c
 sed -i 's/"QEMU /"/g' migration/rdma.c
 
 # is this needed?
-# sed -i 's/0x51454d5520434647ULL/0x4155535520434647ULL/g' pc-bios/optionrom/optionrom.h
+sed -i 's/0x51454d5520434647ULL/0x4155535520434647ULL/g' pc-bios/optionrom/optionrom.h
 
 quilt add pc-bios/s390-ccw/virtio-scsi.h
 sed -i 's/"QEMU CD-ROM     "/"ASUS CD-ROM     "/g' pc-bios/s390-ccw/virtio-scsi.h
@@ -382,10 +382,10 @@ quilt add qapi/ui.json
 sed -i 's/"QEMU /"/g' qapi/ui.json
 
 # we don't use seabios
-# sed -i 's/"QEMU/"ASUS/g' roms/seabios/src/fw/ssdt-misc.dsl
+sed -i 's/"QEMU/"ASUS/g' roms/seabios/src/fw/ssdt-misc.dsl
 
 # we don't use seabios
-# sed -i 's/"QEMU/"ASUS/g' roms/seabios-hppa/src/fw/ssdt-misc.dsl
+sed -i 's/"QEMU/"ASUS/g' roms/seabios-hppa/src/fw/ssdt-misc.dsl
 
 # already added
 sed -i 's/"QEMU TCG CPU version "/"TCG CPU version "/g' target/i386/cpu.c

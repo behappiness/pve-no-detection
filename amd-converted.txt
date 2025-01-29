@@ -1,0 +1,69 @@
+LC_ALL=C PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin 
+HOME=/var/lib/libvirt/qemu/domain--1-WIN10 
+XDG_DATA_HOME=/var/lib/libvirt/qemu/domain--1-WIN10/.local/share 
+XDG_CACHE_HOME=/var/lib/libvirt/qemu/domain--1-WIN10/.cache 
+XDG_CONFIG_HOME=/var/lib/libvirt/qemu/domain--1-WIN10/.config 
+/usr/bin/qemu-system-x86_64 
+-name guest=WIN10,debug-threads=on 
+-S 
+-object '{"qom-type":"secret","id":"masterKey0","format":"raw","file":"/var/lib/libvirt/qemu/domain--1-WIN10/master-key.aes"}' 
+-blockdev '{"driver":"file","filename":"/usr/local/share/edk2/x64/OVMF_CODE.edk2-stable202411.secboot.fd","node-name":"libvirt-pflash0-storage","auto-read-only":true,"discard":"unmap"}' 
+-blockdev '{"node-name":"libvirt-pflash0-format","read-only":true,"driver":"raw","file":"libvirt-pflash0-storage"}' 
+-blockdev '{"driver":"file","filename":"/var/lib/libvirt/qemu/nvram/WIN10_VARS.fd","node-name":"libvirt-pflash1-storage","auto-read-only":true,"discard":"unmap"}' 
+-blockdev '{"node-name":"libvirt-pflash1-format","read-only":false,"driver":"raw","file":"libvirt-pflash1-storage"}' 
+-machine pc-q35-9.1,usb=off,smm=on,kernel_irqchip=on,dump-guest-core=off,memory-backend=pc.ram,pflash0=libvirt-pflash0-format,pflash1=libvirt-pflash1-format 
+-accel kvm 
+-cpu host,migratable=on,svm=on,topoext=on,invtsc=on,hypervisor=off,ssbd=off,amd-ssbd=off,virt-ssbd=off,rdtscp=off,rdpid=off,kvmclock=off,kvm=off,pmu=off,host-cache-info=on,l3-cache=off 
+-global driver=cfi.pflash01,property=secure,value=on 
+-m 16384 
+-object '{"qom-type":"memory-backend-ram","id":"pc.ram","size":17179869184}' 
+-overcommit mem-lock=off 
+-smp 1,sockets=1,cores=1,threads=1 
+-uuid 5607c162-59e6-4ef4-a454-bd55d24f6465 
+-smbios 'type=0,vendor=American Megatrends Inc.,version=2604,date=11/29/2024,release=26.4' 
+-smbios 'type=1,manufacturer=ASUS,product=System Product Name,version=System Version,serial=System Serial Number,sku=SKU,family=To be filled by O.E.M.' 
+-smbios 'type=2,manufacturer=ASUSTeK COMPUTER INC.,product=ProArt B650-CREATOR,version=Rev 1.xx,serial=231129179000052,asset=Default string,location=Default string' 
+-smbios 'type=3,manufacturer=Default string,version=Default string,serial=Default string,asset=Default string,sku=Default string' 
+-smbios 'type=11,value=Default string,value=Default string,value=IKNOW,value=Default string,value=Default string,value=Default string' 
+-display none 
+-no-user-config 
+-nodefaults 
+-chardev socket,id=charmonitor,path=/var/lib/libvirt/qemu/domain--1-WIN10/monitor.sock,server=on,wait=off 
+-mon chardev=charmonitor,id=monitor,mode=control 
+-rtc base=localtime 
+-global kvm-pit.lost_tick_policy=delay 
+-no-shutdown 
+-global ICH9-LPC.disable_s3=0 
+-global ICH9-LPC.disable_s4=0 
+-boot strict=on 
+-device '{"driver":"pcie-root-port","port":8,"chassis":1,"id":"pci.1","bus":"pcie.0","multifunction":true,"addr":"0x1"}' 
+-device '{"driver":"pcie-root-port","port":9,"chassis":2,"id":"pci.2","bus":"pcie.0","addr":"0x1.0x1"}' 
+-device '{"driver":"pcie-root-port","port":10,"chassis":3,"id":"pci.3","bus":"pcie.0","addr":"0x1.0x2"}' 
+-device '{"driver":"qemu-xhci","id":"usb","bus":"pci.2","addr":"0x0"}' 
+-blockdev '{"driver":"file","filename":"/var/lib/libvirt/images/win10.img","aio":"native","node-name":"libvirt-1-storage","cache":{"direct":true,"no-flush":false},"auto-read-only":true,"discard":"unmap"}' 
+-blockdev '{"node-name":"libvirt-1-format","read-only":false,"discard":"unmap","cache":{"direct":true,"no-flush":false},"driver":"raw","file":"libvirt-1-storage"}' 
+-device '{"driver":"ide-hd","bus":"ide.0","drive":"libvirt-1-format","id":"sata0-0-0","bootindex":1,"write-cache":"on","serial":"CAC0_25CA_57AB_841F.","rotation_rate":1,"discard_granularity":0}' 
+-netdev '{"type":"tap","fd":"27","id":"hostnet0"}' 
+-device '{"driver":"e1000e","netdev":"hostnet0","id":"net0","mac":"f0:bc:8e:cd:6e:ec","bus":"pci.1","addr":"0x0"}' 
+-chardev null,id=chrtpm 
+-tpmdev emulator,id=tpm-tpm0,chardev=chrtpm 
+-device '{"driver":"tpm-tis","tpmdev":"tpm-tpm0","id":"tpm0"}' 
+-audiodev '{"id":"audio1","driver":"none"}' 
+-smbios type=0,uefi=true 
+-smbios 'type=1,serial=To be filled by O.E.M.,uuid=5607c162-59e6-4ef4-a454-bd55d24f6465' 
+-smbios 'type=2,serial=To be filled by O.E.M.' -smbios 'type=3,serial=To be filled by O.E.M.' 
+-smbios type=4,sock_pfx=AM5,max-speed=4400,current-speed=3600 
+-smbios 'type=17,loc_pfx=DIMMA2,bank=P0 CHANNEL A,manufacturer=Unknown,serial=Unknown,asset=Not Specified,part=Not Specified,speed=4800' 
+-sandbox on,obsolete=deny,elevateprivileges=deny,spawn=deny,resourcecontrol=deny 
+-msg timestamp=on
+
+
+
+
+-cpu l3-cache=off
+-no-user-config 
+-no-shutdown 
+-global ICH9-LPC.disable_s3=0 
+-global ICH9-LPC.disable_s4=0
+-sandbox on,obsolete=deny,elevateprivileges=deny,spawn=deny,resourcecontrol=deny 
+-msg timestamp=on
